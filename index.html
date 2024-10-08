@@ -16,23 +16,36 @@
       h1 {
         text-align: center;
       }
-      .board{
+      .board {
         width: 500px;
         height: 500px;
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 auto;
       }
-      .cell{
-        width: 50px;
-        height: ;
+      .cell {
+        width: 48px;
+        height: 48px;
+        border: 1px solid;
+        position: relative;
+      }
+      .cell.monster::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("monster.jpeg");
+       
       }
     </style>
   </head>
   <body>
     <h1>Monster Game</h1>
     <div class="board"></div>
+
     <script>
       const board = document.querySelector(".board");
-      for(let i = 0; i< 100;i++ )
-      board.innerHTML+= `<div class="cell"></div>`
+      for (let i = 0; i < 100; i++)
+        board.innerHTML += `<div class="cell monster"></div>`;
     </script>
   </body>
 </html>
