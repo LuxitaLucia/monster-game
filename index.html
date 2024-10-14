@@ -13,7 +13,9 @@
         color: lightblue;
       }
 
-      h1 {
+      h1,
+      h2,
+      h4 {
         text-align: center;
       }
       .board {
@@ -34,18 +36,95 @@
         position: absolute;
         inset: 0;
         background-image: url("monster.jpeg");
-       
+        background-size: cover;
+        margin: 10px;
+      }
+      .cell.coin::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("coin.jpeg");
+        background-size: cover;
+        margin: 10px;
+      }
+      .gameOver {
+        display: none;
+        font-size: 25px;
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.9);
+
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .gameOver.show {
+        display: flex;
       }
     </style>
   </head>
   <body>
     <h1>Monster Game</h1>
+    <h2>Score: <span>0</span></h2>
     <div class="board"></div>
+    <div class="gameOver">
+      <h3>Game Over</h3>
+      <h4>
+        Your final score is: <span>0</span> !
+        <br />
+        <br />
+        Refresh to play again
+      </h4>
+    </div>
 
     <script>
       const board = document.querySelector(".board");
+      const gameOver = document.querySelector(".gameOver");
+      const scoreEl1 = document.querySelector("h2 span");
+      const scoreEl2 = document.querySelector("h4 span");
       for (let i = 0; i < 100; i++)
-        board.innerHTML += `<div class="cell monster"></div>`;
+        board.innerHTML += `<div class="cell">${i}</div>`;
+
+      const cells = document.querySelectorAll(".board .cell");
+
+      let monsterPosition = 0;
+      let monsterDirection = "right";
+      let coinPosition = 0;
+      let score = 0;
+      let isGameOver = false;
+
+      const randomizeCoin = () => {
+        const newPosition = Math.round(Math.random() * 99);
+        if (newPosition !== coinPosition && newPosition !== monsterPosition) {
+          cells[coinPosition].classList.remove("coin");
+          coinPosition = newPosition;
+          cells[coinPosition].classList.add("coin");
+        } else randomizeCoin();
+      };
+      randomizeCoin();
+
+      cells[0].classList.add("monster");
+
+      const mooveMonster = () => {
+        switch (monsterDirection) {
+          case "right":
+            if (monsterPosition.toString().endsWith("9")) {
+              isGameOver = true;
+            } else {
+              cells[monsterPosition].classList.remove("monster");
+              monsterPosition++;
+              cells[monsterPosition].classList.add("monster");
+            }
+            break;
+        }
+        if (!isGameOver) {
+          setTimeout(mooveMonster, 1000);
+        } else {
+          gameOver.classList.add("show");
+        }
+      };
+
+      setTimeout(mooveMonster, 1000);
     </script>
   </body>
 </html>
