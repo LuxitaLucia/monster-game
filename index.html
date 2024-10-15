@@ -83,7 +83,7 @@
       const scoreEl1 = document.querySelector("h2 span");
       const scoreEl2 = document.querySelector("h4 span");
       for (let i = 0; i < 100; i++)
-        board.innerHTML += `<div class="cell">${i}</div>`;
+        board.innerHTML += `<div class="cell"></div>`;
 
       const cells = document.querySelectorAll(".board .cell");
 
@@ -116,15 +116,66 @@
               cells[monsterPosition].classList.add("monster");
             }
             break;
+          case "down":
+            if (monsterPosition >= 90) {
+              isGameOver = true;
+            } else {
+              cells[monsterPosition].classList.remove("monster");
+              monsterPosition += 10;
+              cells[monsterPosition].classList.add("monster");
+            }
+            break;
+          case "up":
+            if (monsterPosition <= 9) {
+              isGameOver = true;
+            } else {
+              cells[monsterPosition].classList.remove("monster");
+              monsterPosition -= 10;
+              cells[monsterPosition].classList.add("monster");
+            }
+            break;
+          case "left":
+            if (monsterPosition % 10 == 0) {
+              isGameOver = true;
+            } else {
+              cells[monsterPosition].classList.remove("monster");
+              monsterPosition--;
+              cells[monsterPosition].classList.add("monster");
+            }
+            break;
         }
+
         if (!isGameOver) {
-          setTimeout(mooveMonster, 1000);
+          if (monsterPosition == coinPosition) {
+            score++;
+            scoreEl1.innerHTML = score;
+            randomizeCoin();
+          }
+          setTimeout(mooveMonster, 1000 / (score + 1));
         } else {
+          scoreEl2.innerHTML = score;
           gameOver.classList.add("show");
         }
       };
 
       setTimeout(mooveMonster, 1000);
+
+      document.addEventListener("keydown", (k) => {
+        switch (k.keyCode) {
+          case 37:
+            monsterDirection = "left";
+            break;
+          case 38:
+            monsterDirection = "up";
+            break;
+          case 39:
+            monsterDirection = "right";
+            break;
+          case 40:
+            monsterDirection = "down";
+            break;
+        }
+      });
     </script>
   </body>
 </html>
